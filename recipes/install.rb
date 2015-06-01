@@ -11,6 +11,11 @@ when 'centos','redhat','fedora','amazon'
   end
 end
 
+node[:deploy].each do |application, deploy|
+  user 'root'
+  bash "usermod -aG docker #{deploy[:user]}"
+end
+
 service "docker" do
   action :start
 end
