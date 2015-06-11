@@ -12,10 +12,13 @@ when 'centos','redhat','fedora','amazon'
 end
 
 node[:deploy].each do |application, deploy|
-  execute "add #{deploy[:user]} to docker group" do
-    command "usermod -aG docker #{deploy[:user]}"
-    user 'root'
-    action :run
+  `getent passwd deploy > /dev/null`
+  if $?.success?
+    execute "add #{deploy[:user]} to docker group" do
+      command "usermod -aG docker #{deploy[:user]}"
+      user 'root'
+      action :run
+    end
   end
 end
 
